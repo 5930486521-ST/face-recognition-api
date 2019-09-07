@@ -1,4 +1,7 @@
-const handleRegister = (req, res, db, bcrypt) => {
+const { postgresClient: db } = require("../connections");
+const bcrypt = require("bcrypt-nodejs");
+
+const handleRegister = (req, res) => {
   const { email, name, pass } = req.body;
   if (!email || !name || !pass) {
     return res.status(400).json('incorrect form submission');

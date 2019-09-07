@@ -1,4 +1,7 @@
-const handleSignin = (db, bcrypt) => (req, res) => {
+const { postgresClient: db } = require("../connections");
+const bcrypt = require("bcrypt-nodejs");
+
+const handleSignin = (req, res) => {
   const { email, pass } = req.body;
   if (!email || !pass) {
     return res.status(400).json('incorrect form submission');

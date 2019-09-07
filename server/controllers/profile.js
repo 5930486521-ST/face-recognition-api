@@ -1,4 +1,6 @@
-const handleProfileGet = (req, res, db) => {
+const { postgresClient: db } = require("../connections");
+
+const handleProfileGet = (req, res) => {
   const { id } = req.params;
   db.select('*').from('users').where({idUser: id})
     .then(user => {

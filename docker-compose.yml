@@ -7,13 +7,14 @@ services:
     ports:
       - "3000:3000"
     volumes: 
-      - ./server.js:/usr/src/smart-brain-api/server.js
-      - ./controllers:/usr/src/smart-brain-api/controllers
+      - ./server:/usr/src/smart-brain-api/server
     command: npm start
     links: 
       - postgres
+      - redis_service
     environment:
       POSTGRES_URI: postgres://admin:password@postgres:5432/smart-brain
+      REDIS_URI: redis://redis_service
   
   postgres:
     container_name: postgres

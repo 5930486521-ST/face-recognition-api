@@ -1,4 +1,5 @@
 const Clarifai = require('clarifai');
+const { postgresClient: db } = require("../connections");
 
 //You must add your own API key here from Clarifai.
 const app = new Clarifai.App({
@@ -14,7 +15,8 @@ const handleApiCall = (req, res) => {
     .catch(err => res.status(400).json('unable to work with API'))
 }
 
-const handleImage = (req, res, db) => {
+
+const handleImage = (req, res) => {
   const { id } = req.body;
   db('users').where('idUser', '=', id)
   .increment('entries', 1)
