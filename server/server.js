@@ -1,11 +1,13 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const cors = require("cors");
+const { idTokenResolver } = require("./middlewares/authentication");
 
 const { postgresClient } = require("./connections");
 
 const register = require("./controllers/register");
 const signin = require("./controllers/signin");
+const signout = require("./controllers/signout")
 const profile = require("./controllers/profile");
 const image = require("./controllers/image");
 
@@ -13,6 +15,7 @@ const app = express();
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use(idTokenResolver)
 
 app.get("/", (req, res) => {
   postgresClient
@@ -21,7 +24,8 @@ app.get("/", (req, res) => {
     .then(userArray => res.json(userArray));
 });
 app.post("/signin", signin.handleSignin);
-// app.post("/resolve-session", signin.handleSession);
+app.get("/signin", signin.handleCreateSession);
+app.get("/signout",signout.handleExpireSession)
 app.post("/regis", register.handleRegister);
 app.get("/profile/:id", profile.handleProfileGet);
 app.put("/image", image.handleImage);
