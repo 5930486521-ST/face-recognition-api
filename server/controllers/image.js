@@ -1,5 +1,6 @@
 const Clarifai = require('clarifai');
 const { postgresClient: db } = require("../connections");
+const { isAuthenticated } = require("../utils/sessions");
 
 //You must add your own API key here from Clarifai.
 const app = new Clarifai.App({
@@ -17,14 +18,24 @@ const handleApiCall = (req, res) => {
 
 
 const handleImage = (req, res) => {
-  const { id } = req.body;
-  db('users').where('idUser', '=', id)
-  .increment('entries', 1)
-  .returning('entries')
-  .then(entries => {
-    res.json(entries[0]);
-  })
-  .catch(err => res.status(400).json('unable to get entries'))
+  const { userInfo, addedEnties } = req.body;
+  const { iduser,entries } = userInfo;
+  const { idUser } = res.locals;
+  if (!isAuthenticated(res)) {
+    return res.status(403).json("unable to Authenticate");
+  }
+  if (iduser != idUser) {
+    return res.status(401).json("unauthorized to do this action");
+  }
+  var updatedEntries = Number(entries) + addedEnties;
+  db('users')
+    .where('iduser', '=', iduser)
+    .update({entries :updatedEntries})
+    .returning('*')
+    .then(entries => {
+      res.json(entries[0]);
+    })
+  .catch(err => res.status(400).json(err))
 }
 
 module.exports = {

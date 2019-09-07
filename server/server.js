@@ -28,6 +28,7 @@ app.get("/signin", signin.handleCreateSession);
 app.get("/signout",signout.handleExpireSession)
 app.post("/regis", register.handleRegister);
 app.get("/profile/:id", profile.handleProfileGet);
+app.post("/profile/:id", profile.handleProfilePost);
 app.put("/image", image.handleImage);
 app.post("/imageurl", image.handleApiCall);
 
